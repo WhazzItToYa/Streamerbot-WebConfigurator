@@ -357,7 +357,7 @@ function addConditionals(widgets, conditionals)
 {
     for (const [elt, expr, compiled] of conditionals)
     {
-        const identifierPattern = /\b[a-zA-Z_$][a-zA-Z0-9_$]*\b/g;
+        const identifierPattern = /\b[a-zA-Z_$][a-zA-Z0-9_.$]*\b/g;
         const matches = expr.match(identifierPattern) || [];
         const variables = matches.filter(id => id in widgets);
 
