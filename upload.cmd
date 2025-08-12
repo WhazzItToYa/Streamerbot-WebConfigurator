@@ -21,4 +21,6 @@ if not defined commit (
 echo let commitId="%commit%"; > version.js
 
 
-aws s3 sync  . s3://whazzittoya.com/%subpath% --exclude * --include *.js --include *.css --include *.html --include *.gif --include *.jpg --include *.png --include *.svg --include *.wav --include *.json --exclude package.json --exclude filtrex/* --include  filtrex/src/*.js --delete
+aws --profile whazzittoya-content-manager s3 sync  . s3://whazzittoya.com/%subpath% --exclude * --include *.js --include *.css --include *.html --include *.gif --include *.jpg --include *.png --include *.svg --include *.wav --include *.json --exclude package.json --exclude filtrex/* --include  filtrex/src/*.js --delete
+
+aws --profile whazzittoya-content-manager cloudfront create-invalidation --distribution-id E2SZXVA1Z780OI --paths "/*"
