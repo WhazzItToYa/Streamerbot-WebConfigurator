@@ -674,7 +674,7 @@ class NumberSliderOption extends OptionUI {
     }
     
     getValue() {
-        return this.numberElt.value;
+        return Number.parseFloat(this.numberElt.value);
     }
 
     setValue(newVal) {
