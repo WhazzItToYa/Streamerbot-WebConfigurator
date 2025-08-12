@@ -132,10 +132,15 @@ h1, h2, h3 {
 
 .optionInput[type="text"],
 .optionInput[type="password"],
+textarea.optionInput,
 .optionSlider {
     width: 100%;
     flex: 1;
     min-width: 0;
+}
+
+textarea.optionInput {
+    height: 5em;
 }
 
 input[type="number"] {

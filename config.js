@@ -219,6 +219,9 @@ function buildConfig(configStr)
     addConditionals(widgets, conditionals);
 }
 
+// Creates and adds the UI for the given config OPTION, and adds it to
+// the end of the PARENT container.
+
 function buildConfigOption(option, parent)
 {
     DEBUG(`creating config option ${option.name}, type ${option.type}`);
@@ -294,11 +297,13 @@ function buildConfigOption(option, parent)
 function makeOptionUI(option)
 {
     try {
-        switch (option.type)
+        switch (option.type.toLowerCase())
         {
             case "string":
             case "text":
                 return new TextOption(option.name, option);
+            case "textblock":
+                return new TextBlockOption(option.name, option);
             case "password":
                 return new PasswordOption(option.name, option);
             case "slider":
@@ -312,7 +317,7 @@ function makeOptionUI(option)
                 return new FileOption(option.name, option);
             case "select":
                 return new SelectOption(option.name, option);
-
+            
             case "group" :
                 return new GroupOption(option);
             default:
@@ -466,6 +471,7 @@ class ErrorUI extends OptionUI {
 }
 
 // An option that represents a group of nested options.
+
 class GroupOption extends OptionUI
 {
     static #optionId = 0;
@@ -504,6 +510,7 @@ class GroupOption extends OptionUI
     
 
 }
+
 
 // Base class for UI based on the <input> tag.
 //
@@ -549,6 +556,38 @@ class InputOption extends OptionUI
 class TextOption extends InputOption {
     constructor(name, options) {
         super(name, "text", options);
+    }
+}
+
+class TextBlockOption extends OptionUI {
+    constructor(name, options) {
+        super(name, options);
+    }
+
+    inputElt; // The actual HTMLInputElement for editing the value,
+              // set as a side-effect of getElement()
+    
+    getElement() {
+        const elt = makeElt(
+        `<div class="configOption">
+          <label for="${this.id}">${escapeText(this.options.label ?? this.name)}: <div class="description"></div></label>
+          <div class="optionWidget"><textarea class="optionInput" id="${this.id}"></textarea></div>
+         </div>`
+        );
+        this.inputElt = elt.querySelector("textarea");
+
+        this.inputElt.addEventListener("change", (event) => {
+            this.change(this.getValue());
+        });
+        return elt;
+    }
+    
+    getValue() {
+        return this.inputElt.value;
+    }
+
+    setValue(newVal) {
+        this.inputElt.value = newVal;
     }
 }
 

@@ -71,7 +71,7 @@ You specify the editable options of your extension in a JSON document. This docu
     "options" : [
         {
             "name" : "welcomeMessage", // S.bot variable name
-            "type" : "text" | "password" | "number" | "bool" | "select" | "file" | "group",
+            "type" : "text" | "textblock" | "password" | "number" | "bool" | "select" | "file" | "group",
             
             "label" : "Welcome message",           // Label to display (optional, defaults to "name")
             "description" : "New viewer greeting", // small help text (optional)
@@ -163,6 +163,12 @@ Example JSON:
             "label" : "Sample Password",
             "description" : "Keep it secret, keep it safe.",
             "default" : "hunter2"
+        },
+        {
+            "name" : "sampleBlock",
+            "type" : "textBlock",
+            "label" : "Sample Block",
+            "description" : "A multiline text block"
         },
         {
             "name" : "sampleFile",

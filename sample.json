@@ -55,6 +55,12 @@
             "default" : "hunter2"
         },
         {
+            "name" : "sampleBlock",
+            "type" : "textBlock",
+            "label" : "Sample Block",
+            "description" : "A multiline text block"
+        },
+        {
             "name" : "sampleFile",
             "type" : "file",
             "label" : "Sample File",
