@@ -273,7 +273,7 @@ function buildConfigOption(option, parent)
         // and then trigger the change callback so that it gets stored.
         if (option.default !== undefined) {
             ui.setValue(option.default);
-            ui.change(option.default);
+            ui.triggerChange(option.default);
         } else {
             ui.triggerValueCallbacks();
         }
@@ -317,6 +317,8 @@ function makeOptionUI(option)
                 return new FileOption(option.name, option);
             case "select":
                 return new SelectOption(option.name, option);
+            case "list":
+                return new ListOption(option.name, option);
             
             case "group" :
                 return new GroupOption(option);
@@ -425,7 +427,7 @@ class OptionUI {
     
     // Internal method to invoke the change callback
     //
-    change(newVal) {
+    triggerChange(newVal) {
         this.changeCallback.forEach((c) => c(newVal));
         this.triggerValueCallbacks();
     }
@@ -507,10 +509,7 @@ class GroupOption extends OptionUI
     getElement() {
         return this.#elt;
     }
-    
-
 }
-
 
 // Base class for UI based on the <input> tag.
 //
@@ -537,7 +536,7 @@ class InputOption extends OptionUI
         this.inputElt = elt.querySelector("input");
 
         this.inputElt.addEventListener("change", (event) => {
-            this.change(this.getValue());
+            this.triggerChange(this.getValue());
         });
         return elt;
     }
@@ -577,7 +576,7 @@ class TextBlockOption extends OptionUI {
         this.inputElt = elt.querySelector("textarea");
 
         this.inputElt.addEventListener("change", (event) => {
-            this.change(this.getValue());
+            this.triggerChange(this.getValue());
         });
         return elt;
     }
@@ -697,12 +696,12 @@ class NumberSliderOption extends OptionUI {
         this.numberElt.addEventListener("change", (event) => {
             let val = this.numberElt.value;
             this.sliderElt.value = val;
-            this.change(val);
+            this.triggerChange(val);
         });
         this.sliderElt.addEventListener("change", (event) => {
             let val = this.sliderElt.value;
             this.numberElt.value = val;
-            this.change(val);
+            this.triggerChange(val);
         });
         // Also provide feedback as it's being slid
         this.sliderElt.addEventListener("input", (event) => {
@@ -790,7 +789,7 @@ class SelectOption extends OptionUI
         );
         this.selectElt = elt.querySelector("select");
         this.selectElt.addEventListener("change", (event) => {
-            this.change(this.getValue());
+            this.triggerChange(this.getValue());
         });
         return elt;
     }
@@ -803,3 +802,34 @@ class SelectOption extends OptionUI
         this.selectElt.value = newVal;
     }
 }
+
+class ListOption extends OptionUI
+{
+    constructor(name, options) {
+        super(name, options);
+
+        this.#uiWidget = new TextOption(name, options);
+        this.#uiWidget.onChange((val) => {
+            this.triggerChange(this.getValue());
+        });
+    }
+
+    #uiWidget;
+
+    setValue(listVal) {
+        const textVal = listVal.join(", ");
+        this.#uiWidget.setValue(textVal);
+    }
+    
+    getValue() {
+        const textVal = this.#uiWidget.getValue();
+        return textVal.split(/\s*,\s*/);
+    }
+    
+    getElement() {
+        return this.#uiWidget.getElement();
+    }
+    
+    
+}
+

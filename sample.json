@@ -41,7 +41,7 @@
             "name" : "sampleSelect",
             "type" : "select",
             "label" : "Sample Selection",
-            "description" : "A list of simple values, or values and their labels",
+            "description" : "A selector among simple values, or values with custom labels",
             "values" : [
                 "Value1", "Value2", ["Value3", "Value3's Label"]
             ],
@@ -61,13 +61,39 @@
             "description" : "A multiline text block"
         },
         {
+            "name" : "sampleCSVList",
+            "type" : "list",
+            "style" : "csv",
+            "label" : "Sample CSV List",
+            "description" : "A list of simple strings, separated by commas",
+            "default" : ["one", "two", "three"]
+        },
+        {
+            "name" : "sampleBlockList",
+            "type" : "list",
+            "style" : "block",
+            "shape" : "list",
+            "label" : "Sample Multiline List",
+            "description" : "A list of simple strings, one per line",
+            "default" : ["one", "two", "three"]
+        },
+        {
+            "name" : "sampleVarList",
+            "type" : "list",
+            "style" : "block",
+            "shape" : "indexedvars",
+            "label" : "Sample Multiline List",
+            "description" : "A list of simple strings, one per line, and stored in separate variables",
+            "default" : ["one", "two", "three"]
+        },
+        {
             "name" : "sampleFile",
             "type" : "file",
             "label" : "Sample File",
             "description" : "A chooser for file paths, with optional type filter",
             "accept" : "image/*"
         },
-
+        
         {
             "name" : "sampleBooleanDependency",
             "type" : "boolean",
