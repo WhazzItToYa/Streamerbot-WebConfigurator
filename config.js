@@ -288,10 +288,10 @@ function buildConfigOption(option, parent)
                                 "globalName": option.name,
                                 "globalValue": ui.getValue()
                             });
+            
         });
-    };
+    }
 }
-
 
 // Creates the OptionUI object that implements the json OPTION.
 function makeOptionUI(option)
@@ -808,22 +808,40 @@ class ListOption extends OptionUI
     constructor(name, options) {
         super(name, options);
 
-        this.#uiWidget = new TextOption(name, options);
+        const style = options.style ?? "csv";
+        
+        // Delegate the actual UI to a text widget, and we'll
+        // wrap it to convert the string to/from a list.
+        if (style === "csv") {
+            this.#uiWidget = new TextOption(name, options);
+            this.#separator = ", ";
+            this.#splitter = (str) => str.split(/\s*,\s*/);
+        } else if (style === "block") {
+            this.#uiWidget = new TextBlockOption(name, options);
+            // Splits at line breaks, but ignores final blank lines.
+            this.#splitter = (str) => str.split(/\r?\n/).filter((line, i, arr) => !(i === arr.length - 1 && line === ''));
+            this.#separator = "\n";
+        } else {
+            this.#uiWidget = new ErrorUI(name, `Unrecognized list style "${style}"`, options);
+        }
+        
         this.#uiWidget.onChange((val) => {
             this.triggerChange(this.getValue());
         });
     }
 
-    #uiWidget;
-
+    #uiWidget;  // The underling UI widget handling UI interaction
+    #separator; // The string to put between list items.
+    #splitter;  // Function that splits the UI value into an array.
+    
     setValue(listVal) {
-        const textVal = listVal.join(", ");
+        const textVal = listVal.join(this.#separator);
         this.#uiWidget.setValue(textVal);
     }
     
     getValue() {
         const textVal = this.#uiWidget.getValue();
-        return textVal.split(/\s*,\s*/);
+        return this.#splitter(textVal);
     }
     
     getElement() {
