@@ -271,11 +271,11 @@ function buildConfigOption(option, parent)
         // If we couldn't get a current value, presumeably because
         // it doesn't exist yet, then set the UI to contain the default value,
         // and then trigger the change callback so that it gets stored.
-        if (option.default !== undefined) {
+        if (option.default === undefined) {
+            ui.triggerValueCallbacks();
+        } else {
             ui.setValue(option.default);
             ui.triggerChange(option.default);
-        } else {
-            ui.triggerValueCallbacks();
         }
     });
     
@@ -835,6 +835,11 @@ class ListOption extends OptionUI
     #splitter;  // Function that splits the UI value into an array.
     
     setValue(listVal) {
+        DEBUG(`LIST Setting value to "${listVal}"`);
+        // If this value came from streamer.bot's global, then it is a JSON string.
+        if (typeof listVal === "string") {
+            listVal = JSON.parse(listVal);
+        }
         const textVal = listVal.join(this.#separator);
         this.#uiWidget.setValue(textVal);
     }
