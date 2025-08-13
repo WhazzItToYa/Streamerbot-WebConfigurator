@@ -94,6 +94,11 @@ You specify the editable options of your extension in a JSON document. This docu
                         ["value314159", "pi"] // Third dropdown, Displays "pi" to user, but the stored value is "value314159"
                        ],
 
+            // For "list"
+            
+            "style" : "csv" // comma-separated list (optional, default)
+            "style" : "textblock" // mutli-line text, one item per line.
+            
             // For "file" (a file picker)
 
             "accept" : "image/*,video/*,.webp", // The extensions or mime types to filter by
@@ -151,7 +156,7 @@ Example JSON:
             "name" : "sampleSelect",
             "type" : "select",
             "label" : "Sample Selection",
-            "description" : "A list of simple values, or values and their labels",
+            "description" : "A selector among simple values, or values with custom labels",
             "values" : [
                 "Value1", "Value2", ["Value3", "Value3's Label"]
             ],
@@ -171,13 +176,30 @@ Example JSON:
             "description" : "A multiline text block"
         },
         {
+            "name" : "sampleCSVList",
+            "type" : "list",
+            "style" : "csv",
+            "label" : "Sample CSV List",
+            "description" : "A list of simple strings, separated by commas",
+            "default" : ["one", "two", "three"]
+        },
+        {
+            "name" : "sampleBlockList",
+            "type" : "list",
+            "style" : "textblock",
+            "shape" : "list",
+            "label" : "Sample Multiline List",
+            "description" : "A list of simple strings, one per line",
+            "default" : ["one", "two", "three"]
+        },
+        {
             "name" : "sampleFile",
             "type" : "file",
             "label" : "Sample File",
             "description" : "A chooser for file paths, with optional type filter",
             "accept" : "image/*"
         },
-
+        
         {
             "name" : "sampleBooleanDependency",
             "type" : "boolean",
@@ -246,6 +268,12 @@ The expression can have the usual simple operators:
 * is one of a list of values: x in (a, b, c), x not in (a, b, c)
 
 The simplest, and probably most useful expression, is simply the name of another simple boolean option: When it is checked, the option shows, and is hidden when the option is unchecked.
+
+### Lists
+
+Lists/Arrays of strings are currently supported with the "**list**" option type. It comes in two flavors:
+* `style: "csv"` : List items separated by commas (with any surrounding spaces removed)
+* `style: "textblock"` : List items are one per line.
 
 ### Option Groups
 

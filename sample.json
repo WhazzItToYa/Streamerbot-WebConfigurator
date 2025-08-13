@@ -71,19 +71,10 @@
         {
             "name" : "sampleBlockList",
             "type" : "list",
-            "style" : "block",
+            "style" : "textblock",
             "shape" : "list",
             "label" : "Sample Multiline List",
             "description" : "A list of simple strings, one per line",
-            "default" : ["one", "two", "three"]
-        },
-        {
-            "name" : "sampleVarList",
-            "type" : "list",
-            "style" : "block",
-            "shape" : "indexedvars",
-            "label" : "Sample Multiline List",
-            "description" : "A list of simple strings, one per line, and stored in separate variables",
             "default" : ["one", "two", "three"]
         },
         {

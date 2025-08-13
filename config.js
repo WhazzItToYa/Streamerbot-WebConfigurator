@@ -808,7 +808,7 @@ class ListOption extends OptionUI
     constructor(name, options) {
         super(name, options);
 
-        const style = options.style ?? "csv";
+        const style = (options.style ?? "csv").toLowerCase();
         
         // Delegate the actual UI to a text widget, and we'll
         // wrap it to convert the string to/from a list.
@@ -816,7 +816,7 @@ class ListOption extends OptionUI
             this.#uiWidget = new TextOption(name, options);
             this.#separator = ", ";
             this.#splitter = (str) => str.split(/\s*,\s*/);
-        } else if (style === "block") {
+        } else if (style === "textblock") {
             this.#uiWidget = new TextBlockOption(name, options);
             // Splits at line breaks, but ignores final blank lines.
             this.#splitter = (str) => str.split(/\r?\n/).filter((line, i, arr) => !(i === arr.length - 1 && line === ''));
